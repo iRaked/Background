@@ -1,44 +1,34 @@
-body{
-    background:linear-gradient(to bottom right, #181A20, #353540);
-    min-height:100vh;
-    overflow:hidden;
+element.style {
 }
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+
+.jd__app {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+
+* {
+    margin: 0;
+    margin-top: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+    margin-left: 0px;
+
+div {
+    display: block;
 }
-:root{
-    --font-1: 'Dosis', sans-serif;
-    --font-2: 'Oswald', sans-serif;
-    --font-3: 'Roboto Condensed', sans-serif;
-}
-:before, 
-:after{
-    content:'';
-    position:absolute;
-}
-canvas{
-    position:absolute;
-    top:0;
-    left:0;
-    z-index:-1;
-}
-.jd__app{
-    width:100%;
-    height:100vh;
-    position:relative;
-    background:linear-gradient(-135deg, #15171D 200px, transparent 201px),
-        linear-gradient(-135deg, #383845 250px ,transparent 251px);
-    font-family:var(--font-1);
-    color:#000;
-    font-size:1em;
-}
-.jd__app:after{
-    width:0;
-    height:0;
-    border-bottom:solid 194px #15171D;
-    border-right:solid 100vw transparent;
-    left:0;
-    bottom:0;
+
+
+.jd__app:after {
+    width: 0;
+    height: 0;
+    border-bottom: solid 194px #15171D;
+    border-bottom-width: 194px;
+    border-bottom-style: solid;
+    border-bottom-color: rgb(21, 23, 29);
+    border-right: solid 100vw transparent;
+    border-right-width: 100vw;
+    border-right-style: solid;
+    border-right-color: transparent;
+    left: 0;
+    bottom: 0;
 }
