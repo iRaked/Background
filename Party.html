@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+      <link rel="icon" type="image/x-icon" href="https://santi-graphics.vercel.app/assets/SG.ico">
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="author" content="Rick">
+      <title>Party Background</title>
+      <!-- Estilos externos -->
+      <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
+      <link rel="author" href="https://santi-graphics.vercel.app/copyright.txt">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+      <!-- Scripts externos -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+      <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+      <!-- Librería externa -->
+      <script src="https://cdn.jsdelivr.net/npm/fireworks-js@2/dist/fireworks.js" defer=""></script>
+      <!-- BLOCK -->
+      <script type="text/javascript">
+      document.onkeydown = function(){return false};
+      document.oncontextmenu = function(){return false}
+      </script>
+
+    <style>
+  body {
+    margin: 0;
+    height: 100vh;
+    width: 100vw;
+    background: url('https://i.ibb.co/34Q3qV1/Background-Paola-Birthday-Deluxe-GFX.gif') no-repeat center center fixed;
+    background-size: cover;
+    overflow: hidden;
+  }
+  canvas {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+<canvas id="fireworks"></canvas>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const canvas = document.getElementById("fireworks");
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
+
+  class Particle {
+    constructor(x, y, color, speed, angle) {
+      this.x = x;
+      this.y = y;
+      this.color = color;
+      this.speed = speed;
+      this.angle = angle;
+      this.life = 0;
+      this.maxLife = 80;
+      this.radius = Math.random() * 3 + 2;
+    }
+    update() {
+      this.x += Math.cos(this.angle) * this.speed;
+      this.y += Math.sin(this.angle) * this.speed;
+      this.speed *= 0.95;
+      this.life++;
+    }
+    draw() {
+      ctx.beginPath();
+      ctx.moveTo(this.x, this.y);
+      // duplicamos la longitud del rayo
+      ctx.lineTo(
+        this.x + Math.cos(this.angle) * this.speed * 20,
+        this.y + Math.sin(this.angle) * this.speed * 20
+      );
+      const gradient = ctx.createLinearGradient(
+        this.x, this.y,
+        this.x + Math.cos(this.angle) * 20,
+        this.y + Math.sin(this.angle) * 20
+      );
+      gradient.addColorStop(0, this.color);
+      gradient.addColorStop(1, "transparent");
+      ctx.strokeStyle = gradient;
+      ctx.shadowColor = this.color;
+      ctx.shadowBlur = 25; // glow más intenso
+      ctx.lineWidth = 2;   // rayos más gruesos
+      ctx.stroke();
+    }
+  }
+
+  class Firework {
+    constructor(x, y, targetY, color) {
+      this.x = x;
+      this.y = y;
+      this.targetY = targetY;
+      this.color = color;
+      this.speed = 6;
+      this.exploded = false;
+      this.particles = [];
+    }
+    update() {
+      if (!this.exploded) {
+        this.y -= this.speed;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.shadowColor = this.color;
+        ctx.shadowBlur = 10;
+        ctx.fill();
+        if (this.y <= this.targetY) {
+          this.explode();
+        }
+      } else {
+        this.particles.forEach((p, i) => {
+          p.update();
+          p.draw();
+          if (p.life > p.maxLife) this.particles.splice(i, 1);
+        });
+      }
+    }
+    explode() {
+      this.exploded = true;
+      const colors = ["#39ff14", "#ff0040", "#00cfff", "#ffd700", "#ff6ec7"];
+      for (let i = 0; i < 80; i++) {
+        const angle = Math.random() * 2 * Math.PI;
+        const speed = Math.random() * 5 + 2;
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        this.particles.push(new Particle(this.x, this.y, color, speed, angle));
+      }
+    }
+  }
+
+  let fireworks = [];
+
+  function createFirework() {
+    const x = Math.random() * canvas.width;
+    const y = canvas.height;
+    const targetY = Math.random() * canvas.height * 0.5 + canvas.height * 0.2;
+    const colors = ["#39ff14", "#ff0040", "#00cfff", "#ffd700", "#ff6ec7"];
+    const color = colors[Math.floor(Math.random() * colors.length)];
+
+    fireworks.push(new Firework(x, y, targetY, color));
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    fireworks.forEach((fw, i) => {
+      fw.update();
+      if (fw.exploded && fw.particles.length === 0) fireworks.splice(i, 1);
+    });
+    requestAnimationFrame(animate);
+  }
+
+  setInterval(createFirework, 1200);
+  animate();
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+      <link rel="icon" type="image/x-icon" href="https://santi-graphics.vercel.app/assets/SG.ico">
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="author" content="Rick">
+      <title>Notes Background</title>
+      <!-- Estilos externos -->
+      <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
+      <link rel="author" href="https://santi-graphics.vercel.app/copyright.txt">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+      <!-- Scripts externos -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+      <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+      <!-- BLOCK -->
+      <script type="text/javascript">
+      document.onkeydown = function(){return false};
+      document.oncontextmenu = function(){return false}
+      </script>
+
+      <style>
+         body {
+          background-image: url('https://i.postimg.cc/pLTWgZyy/Background-Radio-FM-Flag-GFX.gif');
+          background-repeat: no-repeat;
+          background-attachment: fixed;
+          background-size: cover;
+        }
+          
+        .music-notes-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+    }
+    
+    /* Corregir las posiciones de inicio de las notas musicales */
+    .music-note {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 24px;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+    animation: floatNote 12s linear infinite;
+    opacity: 0;
+    }
+    
+    .music-note:nth-child(1) { left: 20%; top: -30px; animation-delay: 0s; font-size: 25px; }
+    .music-note:nth-child(2) { left: 40%; top: -30px; animation-delay: 2s; font-size: 18px; }
+    .music-note:nth-child(3) { left: 60%; top: -30px; animation-delay: 4s; font-size: 22px; }
+    .music-note:nth-child(4) { left: 80%; top: -30px; animation-delay: 6s; font-size: 26px; }
+    .music-note:nth-child(5) { left: 10%; top: -30px; animation-delay: 1s; font-size: 20px; }
+    .music-note:nth-child(6) { left: 30%; top: -30px; animation-delay: 3s; font-size: 19px; }
+    .music-note:nth-child(7) { left: 50%; top: -30px; animation-delay: 5s; font-size: 24px; }
+    .music-note:nth-child(8) { left: 70%; top: -30px; animation-delay: 7s; font-size: 21px; }
+    .music-note:nth-child(9) { left: 15%; top: -30px; animation-delay: 8s; font-size: 23px; }
+    .music-note:nth-child(10) { left: 35%; top: -30px; animation-delay: 10s; font-size: 19px; }
+    
+    /* Animación modificada para que las notas se muevan solo dentro del contenedor */
+    @keyframes floatNote {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.8;
+    }
+    90% {
+        opacity: 0.6;
+    }
+    100% {
+        transform: translateY(380px) rotate(360deg);
+        opacity: 0;
+    }
+    }
+
+      </style>
+    
+    <style>
+    .music-notes-container {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 2;
+      overflow: hidden;
+    }
+
+    .music-note {
+      position: absolute;
+      color: rgba(255,255,255,0.7);
+      text-shadow: 0 0 8px rgba(255,255,255,0.8);
+      animation: floatNote 12s linear infinite;
+      opacity: 0;
+    }
+
+    @keyframes floatNote {
+      0%   { transform: translateY(0) rotate(0deg); opacity: 0; }
+      10%  { opacity: 0.9; }
+      90%  { opacity: 0.6; }
+      100% { transform: translateY(380px) rotate(360deg); opacity: 0; }
+    }
+    </style>
+        
+</head>
+<body>
+    <!-- Notas musicales flotantes -->
+    <aside class="music-notes-container">
+        <span class="music-note">♪</span>
+        <span class="music-note">♫</span>
+        <span class="music-note">♩</span>
+        <span class="music-note">♬</span>
+        <span class="music-note">♪</span>
+        <span class="music-note">♫</span>
+        <span class="music-note">♩</span>
+        <span class="music-note">♬</span>
+    </aside>
+
+    <aside class="music-notes-container" id="notes"></aside>
+
+<script>
+    const notesContainer = document.getElementById('notes');
+    const symbols = ["♪","♫","♩","♬"];
+    const totalNotes = 20; // cantidad de notas que quieres
+
+    for (let i = 0; i < totalNotes; i++) {
+      const note = document.createElement("span");
+      note.className = "music-note";
+      note.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+
+      // posición horizontal aleatoria
+      note.style.left = Math.random() * 90 + "%";
+      note.style.top = "-30px";
+
+      // tamaño aleatorio
+      note.style.fontSize = (18 + Math.random() * 10) + "px";
+
+      // delay aleatorio para escalonar animaciones
+      note.style.animationDelay = (Math.random() * 10) + "s";
+
+      notesContainer.appendChild(note);
+    }
+</script>
+
+</body>
+</html>

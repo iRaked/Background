@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+      <link rel="icon" type="image/x-icon" href="https://santi-graphics.vercel.app/assets/SG.ico">
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="author" content="Rick">
+      <title>Urban Background</title>
+      <!-- Estilos externos -->
+      <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
+      <link rel="author" href="https://santi-graphics.vercel.app/copyright.txt">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+      <!-- Scripts externos -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+      <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+      <!-- BLOCK -->
+      <script type="text/javascript">
+      document.onkeydown = function(){return false};
+      document.oncontextmenu = function(){return false}
+      </script>
+
+    <style>
+      body {
+        background-image: url('https://i.imgur.com/zzDS8my.png');
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+      }
+
+      /* Capa de partículas en el panel derecho */
+      .right-particle-layer {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+        z-index: 2; /* debajo de modales, encima del fondo */
+      }
+
+      /* Partícula individual con efecto verde neón */
+      .right-particle-layer .particle {
+        position: absolute;
+        width: var(--size, 4px);
+        height: var(--size, 4px);
+        border-radius: 50%;
+        background: #39ff14; /* verde neón */
+        box-shadow: 
+          0 0 6px #39ff14,
+          0 0 12px #39ff14,
+          0 0 24px rgba(57,255,20,0.8);
+        animation: fall linear forwards;
+      }
+
+      /* Animación de caída */
+      @keyframes fall {
+        from { transform: translateY(-20px) translateX(var(--x-start)); opacity: 1; }
+        to   { transform: translateY(480px) translateX(var(--x-end)); opacity: 0; }
+      }
+    </style>
+
+        
+</head>
+<body>
+
+<!-- Stars Effects -->
+<div id="right-particle-layer" class="right-particle-layer"></div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const rightLayer = document.getElementById('right-particle-layer');
+    if (!rightLayer) return;
+
+    function createParticle() {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      const size = Math.random() * 2 + 1; // tamaño intacto
+      p.style.setProperty('--size', `${size}px`);
+      p.style.left = `${Math.random() * 100}%`;
+      p.style.setProperty('--x-start', `${(Math.random() - 0.5) * 20}px`);
+      p.style.setProperty('--x-end', `${(Math.random() - 0.5) * 60}px`);
+      const duration = Math.random() * 6 + 5; // más duración (5–11s)
+      p.style.animationDuration = `${duration}s`;
+      rightLayer.appendChild(p);
+      setTimeout(() => p.remove(), duration * 1000);
+    }
+
+    // más densidad de partículas
+    setInterval(createParticle, 100);
+  });
+</script>
+
+</body>
+</html>
