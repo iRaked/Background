@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <link rel="icon" type="image/x-icon" href="https://santi-graphics.vercel.app/assets/SG.ico" />
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="author" content="Rick">
+  <title>Clock 2</title>
+  <!-- Estilos externos -->
+  <link rel="author" href="https://santi-graphics.vercel.app/copyright.txt">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Scripts externos -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.2.4/pixi.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.ripples/0.5.3/jquery.ripples.min.js"></script>
+  <!-- BLOCK -->
+  <script type="text/javascript">
+  document.onkeydown = function(){return false};
+  document.oncontextmenu = function(){return false}
+  </script>
+
+  <style>
+        :root {
+      --bg-glass: rgba(0,0,0,0.4);
+      --border-glass: rgba(255,255,255,0.1);
+      --shadow-glass: 0 8px 32px rgba(0,0,0,0.5);
+      --text-primary: #FFF;
+      --text-secondary: #DDD;
+      --accent-glow: rgba(255,255,255,0.6);
+      --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: transparent;
+      overflow: hidden;
+      font-family: var(--font-main);
+    }
+
+    .main-container {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 10;
+    }
+
+    .clock-box {
+      position: relative;
+      padding: 12px 20px; /* Reducido de 20px a 12px verticalmente para bajar el alto */
+      background: var(--bg-glass);
+      border-radius: 15px;
+      backdrop-filter: blur(5px);
+      border: 1px solid var(--border-glass);
+      box-shadow: var(--shadow-glass);
+      text-align: center;
+      overflow: hidden;
+    }
+
+    #ripple-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .content-layer {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px; /* Controla el espacio entre elementos de forma compacta */
+    }
+
+    .java-icon {
+      font-size: 2.8rem;
+      background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+      background-size: 300%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: multicolor-shift 8s linear infinite;
+      filter: drop-shadow(0 0 8px rgba(255,255,255,0.3));
+      display: block;
+      margin: 0; /* Margen eliminado, usamos el gap del padre */
+      line-height: 1;
+    }
+
+    @keyframes multicolor-shift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    #digital-clock {
+      font-size: 3rem;
+      font-weight: bold;
+      color: var(--text-primary);
+      text-shadow: 0 0 15px var(--accent-glow);
+      letter-spacing: 2px;
+      line-height: 1; /* Evita espacio extra de interlineado */
+      margin: 0;
+    }
+
+    .hdm-text {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      margin: 0; /* Margen eliminado */
+    }
+
+    .chat-room-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #ffae00;
+      text-shadow: 0 0 10px rgba(255,174,0,0.5);
+      letter-spacing: 1px;
+      margin: 0; /* Margen eliminado */
+    }
+
+    .welcome-box {
+      margin-top: 12px; /* Reducido de 20px a 12px */
+      height: 40px;
+      position: relative;
+      width: 300px; 
+      display: flex;
+      justify-content: center;
+    }
+
+    .word {
+      position: absolute;
+      opacity: 0;
+      transition: all 0.5s ease;
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: var(--text-primary);
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+      white-space: nowrap;
+    }
+
+    .letter {
+      display: inline-block;
+      transition: all 0.4s ease;
+    }
+
+    .letter.out { transform: translateY(-20px) scale(0.5); opacity: 0; }
+    .letter.behind { transform: translateY(20px); opacity: 0; }
+    .letter.in { transform: translateY(0) scale(1); opacity: 1; }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="main-container">
+    <div class="clock-box">
+      <canvas id="ripple-canvas"></canvas>
+      
+      <div class="content-layer">
+        <i class="fa-solid fa-mug-hot java-icon"></i>
+        <div id="digital-clock">00:00:00</div>
+        <div class="hdm-text">Cargando...</div>
+      </div>
+
+    </div>
+
+    <div class="welcome-box">
+      <div class="word">¡Bienvenido!</div>
+      <div class="word">El Cafecito 1FM</div>
+    </div>
+  </div>
+
+  <script>
+    function updateClock() {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      document.getElementById('digital-clock').textContent = `${hours}:${minutes}:${seconds}`;
+    }
+
+    function setLocation() {
+      try {
+        const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const city = userTimeZone.split('/')[1]?.replace(/_/g, ' ') || "Hora Local";
+        document.querySelector('.hdm-text').textContent = city;
+      } catch (e) {
+        document.querySelector('.hdm-text').textContent = "Hora Local";
+      }
+    }
+
+    setInterval(updateClock, 1000);
+    updateClock();
+    setLocation();
+
+    const canvas = document.getElementById('ripple-canvas');
+    const ctx = canvas.getContext('2d');
+    let ripples = [];
+
+    function resizeCanvas() {
+      const parent = canvas.parentElement;
+      canvas.width = parent.offsetWidth;
+      canvas.height = parent.offsetHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Ripple {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.r = 0;
+        this.opacity = 0.4;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(255, 255, 255, ${this.opacity})`;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        this.r += 0.5;
+        this.opacity -= 0.006;
+      }
+    }
+
+    function animateRipples() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (Math.random() < 0.02) ripples.push(new Ripple()); // Frecuencia ligeramente reducida para móvil
+      for (let i = ripples.length - 1; i >= 0; i--) {
+        ripples[i].draw();
+        if (ripples[i].opacity <= 0) ripples.splice(i, 1);
+      }
+      requestAnimationFrame(animateRipples);
+    }
+    animateRipples();
+
+    const words = document.querySelectorAll('.word');
+    let currentWordIndex = 0;
+
+    function setupWords() {
+      words.forEach(word => {
+        const text = word.textContent;
+        word.innerHTML = '';
+        [...text].forEach(char => {
+          const span = document.createElement('span');
+          span.className = 'letter behind';
+          span.innerHTML = char === ' ' ? '&nbsp;' : char;
+          word.appendChild(span);
+        });
+      });
+    }
+
+    function changeWord() {
+      const currentWord = words[currentWordIndex];
+      const nextIndex = (currentWordIndex + 1) % words.length;
+      const nextWord = words[nextIndex];
+
+      const currentLetters = currentWord.querySelectorAll('.letter');
+      currentLetters.forEach((l, i) => {
+        setTimeout(() => l.className = 'letter out', i * 40);
+      });
+      setTimeout(() => { currentWord.style.opacity = 0; }, currentLetters.length * 40 + 300);
+
+      nextWord.style.opacity = 1;
+      const nextLetters = nextWord.querySelectorAll('.letter');
+      nextLetters.forEach((l, i) => {
+        l.className = 'letter behind';
+        setTimeout(() => l.className = 'letter in', 400 + (i * 40));
+      });
+
+      currentWordIndex = nextIndex;
+    }
+
+    setupWords();
+    words[0].style.opacity = 1;
+    words[0].querySelectorAll('.letter').forEach(l => l.className = 'letter in');
+    setInterval(changeWord, 3500);
+  </script>
+</body>
+</html>
