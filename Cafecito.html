@@ -21,7 +21,7 @@
   </script>
 
   <style>
-        :root {
+    :root {
       --bg-glass: rgba(0,0,0,0.4);
       --border-glass: rgba(255,255,255,0.1);
       --shadow-glass: 0 8px 32px rgba(0,0,0,0.5);
@@ -52,7 +52,7 @@
 
     .clock-box {
       position: relative;
-      padding: 12px 20px; /* Reducido de 20px a 12px verticalmente para bajar el alto */
+      padding: 12px 20px;
       background: var(--bg-glass);
       border-radius: 15px;
       backdrop-filter: blur(5px);
@@ -78,20 +78,21 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 2px; /* Controla el espacio entre elementos de forma compacta */
+      gap: 2px;
     }
 
     .java-icon {
       font-size: 2.8rem;
-      background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+      /* ✅ DEGRADADO ACTUALIZADO: Azul marino a azul cielo */
+      background: linear-gradient(45deg, #000428, #004e92, #00c6ff, #000428);
       background-size: 300%;
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
       animation: multicolor-shift 8s linear infinite;
-      filter: drop-shadow(0 0 8px rgba(255,255,255,0.3));
+      filter: drop-shadow(0 0 8px rgba(0, 198, 255, 0.4)); /* Sombra ajustada al tono azul */
       display: block;
-      margin: 0; /* Margen eliminado, usamos el gap del padre */
+      margin: 0;
       line-height: 1;
     }
 
@@ -107,7 +108,7 @@
       color: var(--text-primary);
       text-shadow: 0 0 15px var(--accent-glow);
       letter-spacing: 2px;
-      line-height: 1; /* Evita espacio extra de interlineado */
+      line-height: 1;
       margin: 0;
     }
 
@@ -116,7 +117,7 @@
       color: var(--text-secondary);
       text-transform: uppercase;
       letter-spacing: 4px;
-      margin: 0; /* Margen eliminado */
+      margin: 0;
     }
 
     .chat-room-name {
@@ -125,11 +126,11 @@
       color: #ffae00;
       text-shadow: 0 0 10px rgba(255,174,0,0.5);
       letter-spacing: 1px;
-      margin: 0; /* Margen eliminado */
+      margin: 0;
     }
 
     .welcome-box {
-      margin-top: 12px; /* Reducido de 20px a 12px */
+      margin-top: 12px;
       height: 40px;
       position: relative;
       width: 300px; 
@@ -156,7 +157,6 @@
     .letter.out { transform: translateY(-20px) scale(0.5); opacity: 0; }
     .letter.behind { transform: translateY(20px); opacity: 0; }
     .letter.in { transform: translateY(0) scale(1); opacity: 1; }
-
   </style>
 </head>
 
@@ -171,7 +171,6 @@
         <div id="digital-clock">00:00:00</div>
         <div class="hdm-text">Cargando...</div>
       </div>
-
     </div>
 
     <div class="welcome-box">
@@ -235,7 +234,7 @@
 
     function animateRipples() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      if (Math.random() < 0.02) ripples.push(new Ripple()); // Frecuencia ligeramente reducida para móvil
+      if (Math.random() < 0.02) ripples.push(new Ripple());
       for (let i = ripples.length - 1; i >= 0; i--) {
         ripples[i].draw();
         if (ripples[i].opacity <= 0) ripples.splice(i, 1);
